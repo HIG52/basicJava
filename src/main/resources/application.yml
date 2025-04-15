@@ -1,2 +1,14 @@
-spring.application.name=basicSampleSite
-
+spring:
+  application:
+    name: basicSampleSite
+logging:
+  level:
+    com:
+      example:
+        basicsamplesite: DEBUG
+    root: INFO
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: logs/bascicSampleSite.log
