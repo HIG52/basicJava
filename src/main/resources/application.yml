@@ -3,18 +3,8 @@ spring:
     name: basicSampleSite
   profiles:
     active: dev
-  datasource:
-    url: jdbc:oracle:thin:@221.132.77.234:1521:DBCA2
-    driver-class-name: oracle.jdbc.OracleDriver
-    username: mcreact
-    password: mcreact1234
-    hikari:
-      connection-timeout: 30000 # 30초
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 600000 # 10분
-      max-lifetime: 1800000 # 30분
-      auto-commit: true
+    include:
+      - db
   jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     hibernate:

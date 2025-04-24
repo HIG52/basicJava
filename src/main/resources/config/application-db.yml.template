@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:DB_NAME
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: username
+    password: password
+    hikari:
+      connection-timeout: 30000 # 30초
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000 # 10분
+      max-lifetime: 1800000 # 30분
+      auto-commit: true
