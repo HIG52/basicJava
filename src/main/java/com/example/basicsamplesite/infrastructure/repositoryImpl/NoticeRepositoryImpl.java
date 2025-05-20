@@ -26,11 +26,6 @@ public class NoticeRepositoryImpl implements NoticeRepository {
     }
 
     @Override
-    public List<Notice> findByCategory(String category) {
-        return noticeJpaRepository.findByCategory(category);
-    }
-
-    @Override
     public Optional<Notice> findById(Long id) {
         return noticeJpaRepository.findById(id);
     }

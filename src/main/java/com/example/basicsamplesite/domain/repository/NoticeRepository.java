@@ -11,8 +11,6 @@ public interface NoticeRepository {
     
     List<Notice> findAllByOrderByCreatedAtDesc();
     
-    List<Notice> findByCategory(String category);
-    
     Optional<Notice> findById(Long id);
     
     Notice save(Notice notice);
