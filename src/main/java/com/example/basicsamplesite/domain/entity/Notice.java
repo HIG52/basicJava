@@ -25,21 +25,25 @@ public class Notice {
     private String content;
 
     @Column(nullable = false)
-    private String category;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private Integer viewCount;
 
     // 생성자
-    public Notice(String title, String content, String category) {
+    private Notice(String title, String content) {
         this.title = title;
         this.content = content;
-        this.category = category;
         this.createdAt = LocalDateTime.now();
         this.viewCount = 0;
+    }
+
+    protected Notice(Long id, String title, String content, LocalDateTime createdAt, Integer viewCount) {
+
+    }
+
+    public static Notice createNotice(String title, String content) {
+        return new Notice(title, content);
     }
 
     public void increaseViewCount() {

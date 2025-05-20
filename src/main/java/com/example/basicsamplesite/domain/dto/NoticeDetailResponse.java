@@ -3,25 +3,26 @@ package com.example.basicsamplesite.domain.dto;
 import com.example.basicsamplesite.domain.entity.Notice;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+/**
+ * 공지사항 상세 정보를 도메인 계층 내에서 전달하기 위한 DTO
+ */
 public record NoticeDetailResponse(
         Long id,
         String title,
         String content,
         LocalDateTime createdAt,
-        String createdAtFormatted,
         Integer viewCount
 ) {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
+    /**
+     * 엔티티에서 도메인 DTO로 변환
+     */
     public static NoticeDetailResponse from(Notice notice) {
         return new NoticeDetailResponse(
                 notice.getId(),
                 notice.getTitle(),
                 notice.getContent(),
                 notice.getCreatedAt(),
-                notice.getCreatedAt().format(FORMATTER),
                 notice.getViewCount()
         );
     }

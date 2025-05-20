@@ -1,10 +1,10 @@
 package com.example.basicsamplesite.presentation;
 
-import com.example.basicsamplesite.domain.dto.NoticeCreateRequest;
 import com.example.basicsamplesite.domain.dto.NoticeCreateResponse;
 import com.example.basicsamplesite.domain.dto.NoticeDetailResponse;
 import com.example.basicsamplesite.domain.dto.NoticeSummaryResponse;
 import com.example.basicsamplesite.domain.service.NoticeService;
+import com.example.basicsamplesite.presentation.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,28 +22,32 @@ public class NoticeController {
 
     // 모든 공지사항 목록 조회
     @GetMapping
-    public ResponseEntity<List<NoticeSummaryResponse>> getAllNotices() {
+    public ResponseEntity<ApiResponse<List<NoticeSummaryDto>>> getAllNotices() {
         List<NoticeSummaryResponse> responses = noticeService.findAllNotices();
-        return ResponseEntity.ok(responses);
+        List<NoticeSummaryDto> dtos = NoticeSummaryDto.listFrom(responses);
+        return ResponseEntity.ok(ApiResponse.success(dtos, "공지사항 목록 조회 성공"));
     }
 
     // ID로 특정 공지사항 조회
     @GetMapping("/{id}")
-    public ResponseEntity<NoticeDetailResponse> getNoticeById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<NoticeDetailDto>> getNoticeById(@PathVariable Long id) {
         NoticeDetailResponse response = noticeService.increaseViewCount(id); // 조회수 증가
-        return ResponseEntity.ok(response);
+        NoticeDetailDto dto = NoticeDetailDto.from(response);
+        return ResponseEntity.ok(ApiResponse.success(dto, "공지사항 상세 조회 성공"));
     }
     
     // 공지사항 생성
     @PostMapping
-    public ResponseEntity<?> createNotice(@Valid @RequestBody NoticeCreateRequest request) {
-        NoticeCreateResponse response = noticeService.createNotice(request);
+    public ResponseEntity<ApiResponse<NoticeCreateResponseDto>> createNotice(@Valid @RequestBody NoticeCreateDto request) {
+        NoticeCreateResponse response = noticeService.createNotice(request.toDomain());
+        NoticeCreateResponseDto dto = NoticeCreateResponseDto.from(response);
         
-        if (response.id() != null) {
-            return ResponseEntity.created(URI.create("/api/notices/" + response.id()))
-                    .body(response);
+        if (dto.success()) {
+            return ResponseEntity.created(URI.create("/api/notices/" + dto.id()))
+                    .body(ApiResponse.success(dto, "공지사항 생성 성공"));
         } else {
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("공지사항 생성 실패: " + dto.message()));
         }
     }
 }
