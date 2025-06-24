@@ -6,20 +6,30 @@ spring:
     include:
       - db
   jpa:
-    database-platform: org.hibernate.dialect.OracleDialect
+    database-platform: org.hibernate.dialect.Oracle10gDialect
     hibernate:
-      ddl-auto: update  # 테이블이 있는지 확인만 하고 업데이트는 하지 않음
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         format_sql: true
         show_sql: true
         use_sql_comments: true
+        hbm2ddl:
+          auto: create
         jdbc:
           batch_size: 10
+          use_sql_comments: true
         order_inserts: true
         order_updates: true
         query:
           in_clause_parameter_padding: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        dialect:
+          enhanced_id_generators: false
+    show-sql: true
 logging:
   level:
     com:

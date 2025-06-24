@@ -1,19 +1,23 @@
 package com.example.basicsamplesite.presentation;
 
-import com.example.basicsamplesite.domain.dto.MainResponse;
-import com.example.basicsamplesite.presentation.dto.ApiResponse;
-import com.example.basicsamplesite.presentation.dto.MainResponseDto;
+import com.example.basicsamplesite.presentation.common.dto.ApiResponse;
+import com.example.basicsamplesite.presentation.common.dto.MainResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 메인 페이지 컨트롤러
+ */
 @RestController
 public class MainController {
 
+    /**
+     * 메인 메시지 조회
+     */
     @GetMapping("/main")
-    public ResponseEntity<ApiResponse<MainResponseDto>> home() {
-        MainResponse domainResponse = MainResponse.of("Hello World");
-        MainResponseDto dto = MainResponseDto.from(domainResponse);
-        return ResponseEntity.ok(ApiResponse.success(dto, "메인 페이지 조회 성공"));
+    public ResponseEntity<ApiResponse<MainResponse>> main() {
+        MainResponse response = MainResponse.of("환영합니다!");
+        return ResponseEntity.ok(ApiResponse.success("메인 메시지 조회 성공", response));
     }
 }
