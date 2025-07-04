@@ -7,16 +7,29 @@ import lombok.Getter;
  */
 @Getter
 public class UpdateUserCommand {
-    private final Long id;
-    private final String name;
+    private final Long dbId;
+    private final String userId;
+    private final String username;
     private final String email;
+    private final String password;
     private final String role;
+    private final String phone;
+    private final String address;
+    private final String zipcode;
+    private final String addressDetail;
 
-    public UpdateUserCommand(Long id, String name, String email, String role) {
-        this.id = id;
-        this.name = name;
+    public UpdateUserCommand(Long dbId, String userId, String username, String email, String password, String role, 
+                            String phone, String address, String zipcode, String addressDetail) {
+        this.dbId = dbId;
+        this.userId = userId;
+        this.username = username;
         this.email = email;
+        this.password = password;
         this.role = role;
+        this.phone = phone;
+        this.address = address;
+        this.zipcode = zipcode;
+        this.addressDetail = addressDetail;
     }
 
 }

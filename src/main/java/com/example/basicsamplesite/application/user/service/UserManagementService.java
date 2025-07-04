@@ -7,6 +7,7 @@ import com.example.basicsamplesite.application.user.dto.UserManagementApplicatio
 import com.example.basicsamplesite.application.user.query.UserListQuery;
 import com.example.basicsamplesite.domain.user.entity.User;
 import com.example.basicsamplesite.domain.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +22,11 @@ import java.util.stream.Collectors;
 public class UserManagementService {
     
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     
-    public UserManagementService(UserRepository userRepository) {
+    public UserManagementService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -59,16 +62,32 @@ public class UserManagementService {
     }
 
     public UserManagementApplicationDto createUser(CreateUserCommand command) {
+        // 사용자 ID 중복 확인
+        if (userRepository.existsByUserId(command.getUserId())) {
+            throw new IllegalArgumentException("이미 존재하는 사용자 ID입니다");
+        }
+        
         // 이메일 중복 확인
         if (userRepository.existsByEmail(command.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다");
         }
         
+        // 선택 필드들은 빈 값이면 null로 저장
+        String phone = isBlankOrNull(command.getPhone()) ? null : command.getPhone();
+        String address = isBlankOrNull(command.getAddress()) ? null : command.getAddress();
+        String zipcode = isBlankOrNull(command.getZipcode()) ? null : command.getZipcode();
+        String addressDetail = isBlankOrNull(command.getAddressDetail()) ? null : command.getAddressDetail();
+        
         User user = User.builder()
-                .name(command.getName())
+                .userId(command.getUserId())
+                .username(command.getUsername())
                 .email(command.getEmail())
-                .password("temp123!") // 임시 비밀번호
+                .password(passwordEncoder.encode(command.getPassword())) // 비밀번호 해싱
                 .role(User.UserRole.valueOf(command.getRole().toUpperCase()))
+                .phone(phone)
+                .address(address)
+                .zipcode(zipcode)
+                .addressDetail(addressDetail)
                 .isActive(true)
                 .build();
         
@@ -77,21 +96,42 @@ public class UserManagementService {
     }
 
     public UserManagementApplicationDto updateUser(UpdateUserCommand command) {
-        User user = userRepository.findById(command.getId())
+        User user = userRepository.findById(command.getDbId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다"));
+        
+        // 사용자 ID 중복 확인 (자신 제외)
+        if (!user.getUserId().equals(command.getUserId()) && userRepository.existsByUserId(command.getUserId())) {
+            throw new IllegalArgumentException("이미 존재하는 사용자 ID입니다");
+        }
         
         // 이메일 중복 확인 (자신 제외)
         if (!user.getEmail().equals(command.getEmail()) && userRepository.existsByEmail(command.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다");
         }
         
-        user.updateUser(
-                command.getName(),
+        // 선택 필드들은 빈 값이면 null로 저장
+        String phone = isBlankOrNull(command.getPhone()) ? null : command.getPhone();
+        String address = isBlankOrNull(command.getAddress()) ? null : command.getAddress();
+        String zipcode = isBlankOrNull(command.getZipcode()) ? null : command.getZipcode();
+        String addressDetail = isBlankOrNull(command.getAddressDetail()) ? null : command.getAddressDetail();
+        
+        user.updateUserWithAddress(
+                command.getUserId(),
+                command.getUsername(),
                 command.getEmail(),
                 User.UserRole.valueOf(command.getRole().toUpperCase()),
-                null, // phone은 관리 API에서 제외
+                phone,
+                address,
+                zipcode,
+                addressDetail,
+                user.getBirthDate(), // 기존 생년월일 유지
                 true // 활성 상태 유지
         );
+        
+        // 비밀번호가 제공되면 변경
+        if (!isBlankOrNull(command.getPassword())) {
+            user.changePassword(passwordEncoder.encode(command.getPassword()));
+        }
         
         User savedUser = userRepository.save(user);
         return convertToUserManagementApplicationDto(savedUser);
@@ -104,13 +144,22 @@ public class UserManagementService {
         
         userRepository.deleteById(id);
     }
+    
+    private boolean isBlankOrNull(String value) {
+        return value == null || value.trim().isEmpty();
+    }
 
     private UserManagementApplicationDto convertToUserManagementApplicationDto(User user) {
         return new UserManagementApplicationDto(
                 user.getId(),
-                user.getName(),
+                user.getUserId(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getRole().name().toLowerCase(),
+                user.getPhone(),
+                user.getAddress(),
+                user.getZipcode(),
+                user.getAddressDetail(),
                 user.getCreatedAt().toLocalDate()
         );
     }

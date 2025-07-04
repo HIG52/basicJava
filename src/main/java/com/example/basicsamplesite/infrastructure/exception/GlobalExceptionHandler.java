@@ -1,5 +1,10 @@
 package com.example.basicsamplesite.infrastructure.exception;
 
+import com.example.basicsamplesite.infrastructure.exception.menu.DuplicateMenuPathException;
+import com.example.basicsamplesite.infrastructure.exception.menu.MenuAccessDeniedException;
+import com.example.basicsamplesite.infrastructure.exception.menu.MenuNotFoundException;
+import com.example.basicsamplesite.infrastructure.exception.menu.MenuPermissionAlreadyExistsException;
+import com.example.basicsamplesite.infrastructure.exception.menu.MenuPermissionNotFoundException;
 import com.example.basicsamplesite.presentation.common.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +25,49 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    /**
+     * 메뉴 관련 예외 처리
+     */
+    @ExceptionHandler(MenuNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMenuNotFoundException(MenuNotFoundException e) {
+        log.warn("Menu not found: {}", e.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(MenuAccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMenuAccessDeniedException(MenuAccessDeniedException e) {
+        log.warn("Menu access denied: {}", e.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicateMenuPathException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDuplicateMenuPathException(DuplicateMenuPathException e) {
+        log.warn("Duplicate menu path: {}", e.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(MenuPermissionAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMenuPermissionAlreadyExistsException(MenuPermissionAlreadyExistsException e) {
+        log.warn("Menu permission already exists: {}", e.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(MenuPermissionNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMenuPermissionNotFoundException(MenuPermissionNotFoundException e) {
+        log.warn("Menu permission not found: {}", e.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(e.getMessage()));
+    }
 
     /**
      * 인증 실패 처리 (401) - 커스텀 예외 사용

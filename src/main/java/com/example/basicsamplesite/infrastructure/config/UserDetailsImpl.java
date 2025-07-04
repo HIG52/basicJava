@@ -37,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
     
     @Override
     public String getUsername() {
-        return user.getEmail(); // 이메일을 username으로 사용
+        return user.getUserId(); // 로그인 시 사용하는 userId를 username으로 사용
     }
     
     @Override

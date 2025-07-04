@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 public class UserDetailResponse {
     private final Long id;
-    private final String name;
+    private final String userId;
+    private final String username;
     private final String email;
     private final User.UserRole role;
     private final LocalDate joinDate;
@@ -27,13 +28,14 @@ public class UserDetailResponse {
     private final LocalDate birthDate;
     private final Object statistics; // 회원 통계 정보 (추후 확장용)
     
-    public UserDetailResponse(Long id, String name, String email, User.UserRole role,
+    public UserDetailResponse(Long id, String userId, String username, String email, User.UserRole role,
                              LocalDate joinDate, LocalDateTime createdAt, LocalDateTime updatedAt,
                              LocalDateTime lastLoginAt, Boolean isActive,
                              String phone, String address, String zipcode, String addressDetail,
                              LocalDate birthDate, Object statistics) {
         this.id = id;
-        this.name = name;
+        this.userId = userId;
+        this.username = username;
         this.email = email;
         this.role = role;
         this.joinDate = joinDate;
@@ -48,4 +50,4 @@ public class UserDetailResponse {
         this.birthDate = birthDate;
         this.statistics = statistics;
     }
-} 
+}

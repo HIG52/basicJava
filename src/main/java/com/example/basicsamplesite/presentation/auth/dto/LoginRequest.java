@@ -2,8 +2,9 @@ package com.example.basicsamplesite.presentation.auth.dto;
 
 import lombok.Getter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * 로그인 요청 DTO - Presentation Layer
@@ -11,9 +12,10 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class LoginRequest {
     
-    @NotBlank(message = "이메일은 필수입니다")
-    @Email(message = "올바른 이메일 형식이 아닙니다")
-    private String email;
+    @NotBlank(message = "사용자 ID는 필수입니다")
+    @Size(min = 4, max = 20, message = "사용자 ID는 4~20자 사이여야 합니다")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "사용자 ID는 영문과 숫자만 사용 가능합니다")
+    private String userId;
     
     @NotBlank(message = "비밀번호는 필수입니다")
     private String password;
@@ -22,13 +24,13 @@ public class LoginRequest {
     public LoginRequest() {
     }
     
-    public LoginRequest(String email, String password) {
-        this.email = email;
+    public LoginRequest(String userId, String password) {
+        this.userId = userId;
         this.password = password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setPassword(String password) {

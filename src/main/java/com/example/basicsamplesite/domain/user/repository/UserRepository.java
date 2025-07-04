@@ -23,6 +23,14 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByUserId(String userId);
+
+    Optional<User> findByUsername(String username);
+
+    boolean existsByUserId(String userId);
+
+    boolean existsByUsername(String username);
+
     void deleteById(Long id);
 
     boolean existsByEmail(String email);

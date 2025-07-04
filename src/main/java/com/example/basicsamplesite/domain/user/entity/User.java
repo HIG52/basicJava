@@ -26,8 +26,11 @@ public class User extends BaseEntity {
     @SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ", allocationSize = 1)
     private Long id;
     
+    @Column(nullable = false, length = 20, unique = true, name = "user_id")
+    private String userId;
+    
     @Column(nullable = false, length = 50)
-    private String name;
+    private String username;
     
     @Column(nullable = false, length = 100, unique = true)
     private String email;
@@ -40,10 +43,11 @@ public class User extends BaseEntity {
     @Builder.Default
     private UserRole role = UserRole.USER;
     
-    @Column(nullable = false, columnDefinition = "NUMBER(1) DEFAULT 1")
+    @Column(nullable = false, columnDefinition = "NUMBER(1) DEFAULT 1", name = "is_active")
     @Builder.Default
     private Boolean isActive = true;
     
+    @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
     
     private String phone;
@@ -52,26 +56,30 @@ public class User extends BaseEntity {
     
     private String zipcode;
     
+    @Column(name = "address_detail")
     private String addressDetail;
     
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
     public enum UserRole {
         ADMIN, USER
     }
 
-    public void updateUser(String name, String email, UserRole role, String phone, Boolean isActive) {
-        this.name = name;
+    public void updateUser(String userId, String username, String email, UserRole role, String phone, Boolean isActive) {
+        this.userId = userId;
+        this.username = username;
         this.email = email;
         this.role = role;
         this.phone = phone;
         this.isActive = isActive;
     }
 
-    public void updateUserWithAddress(String name, String email, UserRole role, String phone, 
+    public void updateUserWithAddress(String userId, String username, String email, UserRole role, String phone, 
                                     String address, String zipcode, String addressDetail, 
                                     LocalDate birthDate, Boolean isActive) {
-        this.name = name;
+        this.userId = userId;
+        this.username = username;
         this.email = email;
         this.role = role;
         this.phone = phone;

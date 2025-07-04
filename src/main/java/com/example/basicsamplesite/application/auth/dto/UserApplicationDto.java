@@ -8,13 +8,15 @@ import lombok.Getter;
 @Getter
 public class UserApplicationDto {
     private final Long id;
-    private final String name;
+    private final String userId;
+    private final String username;
     private final String email;
     private final String role;
 
-    public UserApplicationDto(Long id, String name, String email, String role) {
+    public UserApplicationDto(Long id, String userId, String username, String email, String role) {
         this.id = id;
-        this.name = name;
+        this.userId = userId;
+        this.username = username;
         this.email = email;
         this.role = role;
     }

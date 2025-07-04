@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 public class UserSummaryResponse {
     private final Long id;
-    private final String name;
+    private final String userId;
+    private final String username;
     private final String email;
     private final User.UserRole role;
     private final LocalDate joinDate;
@@ -21,11 +22,12 @@ public class UserSummaryResponse {
     private final Boolean isActive;
     private final LocalDateTime lastLoginAt;
     
-    public UserSummaryResponse(Long id, String name, String email, User.UserRole role, 
+    public UserSummaryResponse(Long id, String userId, String username, String email, User.UserRole role, 
                               LocalDate joinDate, LocalDateTime createdAt, LocalDateTime updatedAt,
                               Boolean isActive, LocalDateTime lastLoginAt) {
         this.id = id;
-        this.name = name;
+        this.userId = userId;
+        this.username = username;
         this.email = email;
         this.role = role;
         this.joinDate = joinDate;
@@ -34,4 +36,4 @@ public class UserSummaryResponse {
         this.isActive = isActive;
         this.lastLoginAt = lastLoginAt;
     }
-} 
+}

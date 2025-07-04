@@ -19,16 +19,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 회원 관리 관련 Controller
+ * 관리자 회원 관리 관련 Controller
  */
 @RestController
-@RequestMapping("/users")
-public class UserManagementController {
+@RequestMapping("/admin/users")
+public class AdminUserManagementController {
     
     private final UserManagementService userManagementService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
-    public UserManagementController(UserManagementService userManagementService) {
+    public AdminUserManagementController(UserManagementService userManagementService) {
         this.userManagementService = userManagementService;
     }
     
@@ -99,9 +99,15 @@ public class UserManagementController {
         try {
             // Presentation DTO → Application Command 변환
             CreateUserCommand command = new CreateUserCommand(
-                    request.getName(), 
-                    request.getEmail(), 
-                    request.getRole()
+                    request.getUserId(),
+                    request.getUsername(), 
+                    request.getEmail(),
+                    request.getPassword(),
+                    request.getRole(),
+                    request.getPhone(),
+                    request.getAddress(),
+                    request.getZipcode(),
+                    request.getAddressDetail()
             );
             
             // Application Service 호출
@@ -131,10 +137,16 @@ public class UserManagementController {
         try {
             // Presentation DTO → Application Command 변환
             UpdateUserCommand command = new UpdateUserCommand(
-                    id, 
-                    request.getName(), 
-                    request.getEmail(), 
-                    request.getRole()
+                    id,
+                    request.getUserId(),
+                    request.getUsername(), 
+                    request.getEmail(),
+                    request.getPassword(),
+                    request.getRole(),
+                    request.getPhone(),
+                    request.getAddress(),
+                    request.getZipcode(),
+                    request.getAddressDetail()
             );
             
             // Application Service 호출
@@ -179,10 +191,15 @@ public class UserManagementController {
      */
     private UserManagementResponse convertToUserManagementResponse(UserManagementApplicationDto dto) {
         return new UserManagementResponse(
-                dto.getId(),
-                dto.getName(),
+                dto.getDbId(),
+                dto.getUserId(),
+                dto.getUsername(),
                 dto.getEmail(),
                 dto.getRole(),
+                dto.getPhone(),
+                dto.getAddress(),
+                dto.getZipcode(),
+                dto.getAddressDetail(),
                 dto.getJoinDate().format(dateFormatter)
         );
     }

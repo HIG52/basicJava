@@ -31,16 +31,15 @@ public class QnaAnswer extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String author;
     
-    @Column(nullable = false)
+    @Column(nullable = false, name = "author_id")
     private Long authorId;
     
-    @Column(nullable = false, columnDefinition = "NUMBER(1,0) DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "NUMBER(1,0) DEFAULT 0", name = "is_admin_answer")
     @Builder.Default
     private Boolean isAdminAnswer = false;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "qna_id", nullable = false)
-    private Qna qna;
+    @Column(nullable = false, name = "qna_id")
+    private Long qnaId;
 
     public void updateContent(String content) {
         this.content = content;

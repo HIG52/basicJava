@@ -60,6 +60,26 @@ public class UserRepositoryImpl implements UserRepository {
     }
     
     @Override
+    public Optional<User> findByUserId(String userId) {
+        return userJpaRepository.findByUserId(userId);
+    }
+    
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userJpaRepository.findByUsername(username);
+    }
+    
+    @Override
+    public boolean existsByUserId(String userId) {
+        return userJpaRepository.existsByUserId(userId);
+    }
+    
+    @Override
+    public boolean existsByUsername(String username) {
+        return userJpaRepository.existsByUsername(username);
+    }
+    
+    @Override
     public void deleteById(Long id) {
         userJpaRepository.deleteById(id);
     }
@@ -95,7 +115,8 @@ public class UserRepositoryImpl implements UserRepository {
     private UserSummaryResponse toUserSummaryResponse(User user) {
         return new UserSummaryResponse(
                 user.getId(),
-                user.getName(),
+                user.getUserId(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getRole(),
                 user.getCreatedAt().toLocalDate(),
@@ -109,7 +130,8 @@ public class UserRepositoryImpl implements UserRepository {
     private UserDetailResponse toUserDetailResponse(User user) {
         return new UserDetailResponse(
                 user.getId(),
-                user.getName(),
+                user.getUserId(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getRole(),
                 user.getCreatedAt().toLocalDate(),

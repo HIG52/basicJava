@@ -110,7 +110,7 @@ CREATE SEQUENCE USER_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 -- 1. 회원 테이블 생성
 CREATE TABLE users (
     id NUMBER(19) PRIMARY KEY,
-    name VARCHAR2(50) NOT NULL,
+    username VARCHAR2(20) NOT NULL UNIQUE,
     email VARCHAR2(100) NOT NULL UNIQUE,
     password VARCHAR2(255) NOT NULL,
     role VARCHAR2(20) DEFAULT 'USER' NOT NULL,
@@ -189,41 +189,47 @@ ALTER TABLE qna_answer ADD CONSTRAINT fk_qna_answer_author FOREIGN KEY (author_i
 -- 샘플 데이터 삽입
 
 -- 1. 회원 데이터 삽입
-INSERT INTO users (id, name, email, password, role, is_active, phone, created_at, updated_at)
-VALUES (USER_SEQ.NEXTVAL, '관리자', 'admin@example.com', 'password123', 'ADMIN', 1, '010-1234-5678', SYSTIMESTAMP, SYSTIMESTAMP);
+INSERT INTO users (id, username, email, password, role, is_active, phone, address, zipcode, address_detail, birth_date, created_at, updated_at)
+VALUES (USER_SEQ.NEXTVAL, 'admin', 'admin@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'ADMIN', 1, '010-1234-5678', '서울특별시 강남구 테헤란로 123', '06234', 'ABC빌딩 10층', DATE '1980-01-01', SYSTIMESTAMP, SYSTIMESTAMP);
 
-INSERT INTO users (id, name, email, password, role, is_active, phone, created_at, updated_at)
-VALUES (USER_SEQ.NEXTVAL, '홍길동', 'hong@example.com', 'password123', 'USER', 1, '010-1111-2222', SYSTIMESTAMP, SYSTIMESTAMP);
+INSERT INTO users (id, username, email, password, role, is_active, phone, address, zipcode, address_detail, birth_date, created_at, updated_at)
+VALUES (USER_SEQ.NEXTVAL, 'hong123', 'hong@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'USER', 1, '010-1111-2222', '부산광역시 해운대구 해운대해변로 264', '48094', '해운대타워 5층', DATE '1990-05-15', SYSTIMESTAMP, SYSTIMESTAMP);
 
-INSERT INTO users (id, name, email, password, role, is_active, phone, created_at, updated_at)
-VALUES (USER_SEQ.NEXTVAL, '김철수', 'kim@example.com', 'password123', 'USER', 1, '010-3333-4444', SYSTIMESTAMP, SYSTIMESTAMP);
+INSERT INTO users (id, username, email, password, role, is_active, phone, address, zipcode, address_detail, birth_date, created_at, updated_at)
+VALUES (USER_SEQ.NEXTVAL, 'kim456', 'kim@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'USER', 1, '010-3333-4444', '대구광역시 중구 동성로 123', '41911', '대구백화점 근처', DATE '1985-08-20', SYSTIMESTAMP, SYSTIMESTAMP);
+
+INSERT INTO users (id, username, email, password, role, is_active, phone, address, zipcode, address_detail, birth_date, created_at, updated_at)
+VALUES (USER_SEQ.NEXTVAL, 'lee789', 'lee@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'USER', 1, '010-5555-6666', '인천광역시 연수구 송도동 123', '21984', '송도센트럴파크 아파트 101동 501호', DATE '1992-12-10', SYSTIMESTAMP, SYSTIMESTAMP);
+
+INSERT INTO users (id, username, email, password, role, is_active, phone, address, zipcode, address_detail, birth_date, created_at, updated_at)
+VALUES (USER_SEQ.NEXTVAL, 'park000', 'park@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'USER', 1, '010-7777-8888', '광주광역시 서구 상무대로 123', '61949', '상무센터시티 B동 1502호', DATE '1988-03-25', SYSTIMESTAMP, SYSTIMESTAMP);
 
 -- 2. 공지사항 데이터 삽입
 INSERT INTO notices (id, title, content, author, author_id, views, is_important, created_at, updated_at)
-VALUES (NOTICE_SEQ.NEXTVAL, '사이트 이용안내', '사이트 이용에 관한 공지사항입니다', '관리자', 1, 150, 1, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (NOTICE_SEQ.NEXTVAL, '사이트 이용안내', '사이트 이용에 관한 공지사항입니다', 'admin', 1, 150, 1, SYSTIMESTAMP, SYSTIMESTAMP);
 
 INSERT INTO notices (id, title, content, author, author_id, views, is_important, created_at, updated_at)
-VALUES (NOTICE_SEQ.NEXTVAL, '시스템 점검 안내', '시스템 점검이 예정되어 있습니다.', '관리자', 1, 42, 0, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (NOTICE_SEQ.NEXTVAL, '시스템 점검 안내', '시스템 점검이 예정되어 있습니다.', 'admin', 1, 42, 0, SYSTIMESTAMP, SYSTIMESTAMP);
 
 INSERT INTO notices (id, title, content, author, author_id, views, is_important, created_at, updated_at)
-VALUES (NOTICE_SEQ.NEXTVAL, '새로운 기능 업데이트', '새로운 기능이 추가되었습니다.', '관리자', 1, 128, 0, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (NOTICE_SEQ.NEXTVAL, '새로운 기능 업데이트', '새로운 기능이 추가되었습니다.', 'admin', 1, 128, 0, SYSTIMESTAMP, SYSTIMESTAMP);
 
 -- 3. 게시판 데이터 삽입
 INSERT INTO board (id, title, content, author, author_id, views, created_at, updated_at)
-VALUES (BOARD_SEQ.NEXTVAL, '첫 번째 게시글입니다', '게시글 내용입니다', '홍길동', 2, 42, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (BOARD_SEQ.NEXTVAL, '첫 번째 게시글입니다', '게시글 내용입니다', 'hong123', 2, 42, SYSTIMESTAMP, SYSTIMESTAMP);
 
 INSERT INTO board (id, title, content, author, author_id, views, created_at, updated_at)
-VALUES (BOARD_SEQ.NEXTVAL, '안녕하세요', '반갑습니다. 첫 게시글을 올립니다.', '김철수', 3, 25, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (BOARD_SEQ.NEXTVAL, '안녕하세요', '반갑습니다. 첫 게시글을 올립니다.', 'kim456', 3, 25, SYSTIMESTAMP, SYSTIMESTAMP);
 
 INSERT INTO board (id, title, content, author, author_id, views, created_at, updated_at)
-VALUES (BOARD_SEQ.NEXTVAL, '질문이 있습니다', '이 사이트는 어떻게 사용하나요?', '홍길동', 2, 18, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (BOARD_SEQ.NEXTVAL, '질문이 있습니다', '이 사이트는 어떻게 사용하나요?', 'hong123', 2, 18, SYSTIMESTAMP, SYSTIMESTAMP);
 
 -- 4. Q&A 데이터 삽입
 INSERT INTO qna (id, title, content, author, author_id, views, status, created_at, updated_at)
-VALUES (QNA_SEQ.NEXTVAL, 'React 관련 질문입니다', 'React Hook 사용법에 대해 질문드립니다', '김철수', 3, 25, 'WAITING', SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (QNA_SEQ.NEXTVAL, 'React 관련 질문입니다', 'React Hook 사용법에 대해 질문드립니다', 'kim456', 3, 25, 'WAITING', SYSTIMESTAMP, SYSTIMESTAMP);
 
 INSERT INTO qna (id, title, content, author, author_id, views, status, is_answered, answer_count, created_at, updated_at)
-VALUES (QNA_SEQ.NEXTVAL, 'Spring Boot 관련 문의', 'Spring Boot 설정 방법을 알고 싶습니다', '홍길동', 2, 35, 'ANSWERED', 1, 1, SYSTIMESTAMP, SYSTIMESTAMP);
+VALUES (QNA_SEQ.NEXTVAL, 'Spring Boot 관련 문의', 'Spring Boot 설정 방법을 알고 싶습니다', 'hong123', 2, 35, 'ANSWERED', 1, 1, SYSTIMESTAMP, SYSTIMESTAMP);
 
 -- 5. Q&A 답변 데이터 삽입
 INSERT INTO qna_answer (id, content, author, author_id, is_admin_answer, qna_id, created_at, updated_at)

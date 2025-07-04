@@ -15,6 +15,5 @@ public interface QnaAnswerJpaRepository extends JpaRepository<QnaAnswer, Long> {
     /**
      * Q&A ID로 답변 목록 조회
      */
-    @Query("SELECT qa FROM QnaAnswer qa WHERE qa.qna.id = :qnaId ORDER BY qa.createdAt ASC")
-    List<QnaAnswer> findByQnaIdOrderByCreatedAt(@Param("qnaId") Long qnaId);
+    List<QnaAnswer> findByQnaIdOrderByCreatedAtAsc(Long qnaId);
 }

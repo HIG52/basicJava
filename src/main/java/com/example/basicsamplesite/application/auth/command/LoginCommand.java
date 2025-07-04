@@ -7,11 +7,11 @@ import lombok.Getter;
  */
 @Getter
 public class LoginCommand {
-    private final String email;
+    private final String username; // 실제로는 userId가 전달됨 (스프링 시큐리티 호환성을 위해 username 유지)
     private final String password;
 
-    public LoginCommand(String email, String password) {
-        this.email = email;
+    public LoginCommand(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 

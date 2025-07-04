@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 공지사항 관련 Controller
+ * 일반 사용자 공지사항 관련 Controller (조회 전용)
  */
 @RestController
 @RequestMapping("/notices")
@@ -79,61 +79,6 @@ public class NoticeController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(ApiResponse.error("공지사항 상세 조회 중 오류가 발생했습니다"));
-        }
-    }
-
-    @PostMapping
-    public ResponseEntity<ApiResponse<NoticeResponse>> createNotice(@Valid @RequestBody NoticeRequest request) {
-        try {
-            CreateNoticeCommand command = new CreateNoticeCommand(request.getTitle(), request.getContent());
-
-            NoticeApplicationDto noticeDto = noticeService.createNotice(command);
-
-            NoticeResponse response = convertToNoticeResponse(noticeDto);
-            
-            return ResponseEntity.ok(ApiResponse.success("공지사항 작성 성공", response));
-            
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(ApiResponse.error("공지사항 작성 중 오류가 발생했습니다"));
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<NoticeResponse>> updateNotice(
-            @PathVariable Long id, 
-            @Valid @RequestBody NoticeRequest request) {
-        try {
-            UpdateNoticeCommand command = new UpdateNoticeCommand(id, request.getTitle(), request.getContent());
-
-            NoticeApplicationDto noticeDto = noticeService.updateNotice(command);
-
-            NoticeResponse response = convertToNoticeResponse(noticeDto);
-            
-            return ResponseEntity.ok(ApiResponse.success("공지사항 수정 성공", response));
-            
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(ApiResponse.error("공지사항 수정 중 오류가 발생했습니다"));
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> deleteNotice(@PathVariable Long id) {
-        try {
-            noticeService.deleteNotice(id);
-            
-            return ResponseEntity.ok(ApiResponse.success("공지사항 삭제 성공"));
-            
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(ApiResponse.error("공지사항 삭제 중 오류가 발생했습니다"));
         }
     }
 
